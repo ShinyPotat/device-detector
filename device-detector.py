@@ -1,15 +1,8 @@
 from scapy.all import sniff
 import json, tweepy, time
+from colorama import init, Fore
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+init(autoreset=True)
 
 with open("./credentials.json") as f:
 	credentials_dict = json.load(f)
@@ -43,16 +36,16 @@ def device_detector(packet):
 					hostname = value
 	
 	if packet.src in mac_dict.keys():
-		print(packet.src + ' (' + bcolors.OKGREEN + mac_dict.get(packet.src) + bcolors.ENDC + ") se ha conectado!")
+		print(packet.src + ' (' + Fore.GREEN + mac_dict.get(packet.src) + Fore.RESET + ") se ha conectado!")
 		api.send_direct_message(2363542539, packet.src + ' (' + mac_dict.get(packet.src) + ') se ha conectado!')
 	if hostname in mac_dict.keys():
-		print(hostname + ' (' + bcolors.OKGREEN + mac_dict.get(hostname) + bcolors.ENDC + " se ha conectado!")
+		print(hostname + ' (' + Fore.GREEN + mac_dict.get(hostname) + Fore.RESET + " se ha conectado!")
 		api.send_direct_message(2363542539, hostname + ' (' + mac_dict.get(hostname) + ') se ha conectado!')
 		
 
 if __name__ == "__main__":
 
-	print(bcolors.HEADER + "Comenzando sniffing..." + bcolors.ENDC)
+	print(Fore.YELLOW + "Comenzando sniffing...")
 
 	while True:
 		sniff(iface=interface, filter="port 67 or port 68", prn=device_detector, count = 1)
